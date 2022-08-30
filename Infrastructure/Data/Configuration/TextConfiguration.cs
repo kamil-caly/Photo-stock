@@ -9,8 +9,8 @@ namespace Infrastructure.Data.Configuration
         public void Configure(EntityTypeBuilder<Text> builder)
         {
             builder.HasOne(t => t.Author)
-                .WithOne(a => a.Text)
-                .HasForeignKey<Text>(t => t.AuthorId);
+                .WithMany(a => a.Texts)
+                .HasForeignKey(t => t.AuthorId);
 
             builder.Property(t => t.DateOfCreation)
                 .HasDefaultValueSql("getutcdate()");

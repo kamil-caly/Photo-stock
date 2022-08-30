@@ -14,6 +14,16 @@ namespace Infrastructure.Repositories
             this.dbContext = dbContext;
         }
 
+        public int Create(int authorId, Text text)
+        {
+            text.AuthorId = authorId;
+
+            dbContext.Texts.Add(text);
+            dbContext.SaveChanges();
+
+            return text.Id;
+        }
+
         public IEnumerable<Text> GetAll()
         {
             var texts = dbContext

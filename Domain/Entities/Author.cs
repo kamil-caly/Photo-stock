@@ -8,7 +8,7 @@
         public string NickName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfRegistration { get; set; }
-        public virtual Photo Photo { get; set; }
-        public virtual Text Text { get; set; }
+        public virtual List<Photo> Photos { get; set; }
+        public virtual List<Text> Texts { get; set; }
     }
 }

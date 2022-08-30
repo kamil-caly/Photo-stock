@@ -8,5 +8,7 @@
         public string NickName { get; set; }
         public DateTime DateOfBirth { get; set; }
         public DateTime DateOfRegistration { get; set; }
+        public List<PhotoDto> Photos { get; set; }
+        public List<TextDto> Texts { get; set; }
     }
 }

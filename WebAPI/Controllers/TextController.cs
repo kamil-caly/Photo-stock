@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/text")]
+    [Route("api/author/{authorId}/text")]
     [ApiController]
     public class TextController : ControllerBase
     {
@@ -21,6 +21,14 @@ namespace WebAPI.Controllers
             var texts = textService.GetAll();
 
             return Ok(texts);
+        }
+
+        [HttpPost]
+        public ActionResult Create([FromRoute] int authorId, [FromBody] CreateTextDto dto)
+        {
+            var newTextId = textService.Create(dto, authorId);
+
+            return Created($"api/author/{authorId}/text/{newTextId}", null);
         }
     }
 }

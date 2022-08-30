@@ -11,6 +11,7 @@ namespace Application.Mappers
             {
                 // Map for Author
                 cfg.CreateMap<Author, AuthorDto>();
+                cfg.CreateMap<CreateTextDto, Text>();
 
                 // Map for Photo
                 cfg.CreateMap<Photo, PhotoDto>()

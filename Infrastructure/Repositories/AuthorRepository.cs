@@ -1,6 +1,7 @@
 ﻿using Domain.Entities;
 using Domain.Interfaces;
 using Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Repositories
 {
@@ -16,9 +17,22 @@ namespace Infrastructure.Repositories
         {
             var authors = dbContext
                 .Authors
+                .Include(a => a.Texts)
+                .Include(a => a.Photos)
                 .ToList();
 
             return authors;
+        }
+
+        public Author GetById(int id)
+        {
+            var author = dbContext
+                .Authors
+                .Include(a => a.Texts)
+                .Include(a => a.Photos)
+                .FirstOrDefault(a => a.Id == id);
+
+            return author;
         }
     }
 }
