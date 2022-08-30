@@ -27,6 +27,10 @@ builder.Services.AddSingleton(PhotoStockMappingProfile.Initialize());
 
 builder.Services.AddScoped<IAuthorService, AuthorService>();
 builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
+builder.Services.AddScoped<ITextService, TextService>();
+builder.Services.AddScoped<ITextRepository, TextRepository>();
 
 var app = builder.Build();
 
