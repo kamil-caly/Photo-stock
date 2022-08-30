@@ -28,5 +28,15 @@ namespace Infrastructure.Repositories
 
             return photos;
         }
+
+        public Photo GetById(int id)
+        {
+            var photo = dbContext
+                .Photos
+                .Include(p => p.Author)
+                .FirstOrDefault(p => p.Id == id);
+
+            return photo;
+        }
     }
 }

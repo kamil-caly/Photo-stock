@@ -22,5 +22,12 @@ namespace Application.Services
 
             return mapper.Map<IEnumerable<PhotoDto>>(photos);
         }
+
+        public PhotoDto GetById(int id)
+        {
+            var photo = photoRepository.GetById(id);
+
+            return mapper.Map<PhotoDto>(photo);
+        }
     }
 }

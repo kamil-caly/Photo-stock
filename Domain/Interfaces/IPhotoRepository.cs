@@ -10,5 +10,6 @@ namespace Domain.Interfaces
     public interface IPhotoRepository
     {
         IEnumerable<Photo> GetAll();
+        Photo GetById(int id);
     }
 }

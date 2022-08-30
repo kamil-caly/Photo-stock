@@ -22,5 +22,14 @@ namespace WebAPI.Controllers
 
             return Ok(photos);
         }
+
+        [HttpGet("{id}")]
+        public ActionResult<PhotoDto> Get([FromRoute] int id)
+        {
+            var photo = photoService.GetById(id);
+
+            return Ok(photo);
+        }
+
     }
 }

@@ -4,6 +4,7 @@ namespace Application.Interfaces
 {
     public interface IPhotoService
     {
-        public IEnumerable<PhotoDto> GetAll();
+        IEnumerable<PhotoDto> GetAll();
+        PhotoDto GetById(int id);
     }
 }
