@@ -16,6 +16,8 @@ namespace Application.Mappers
                 cfg.CreateMap<Photo, PhotoDto>()
                 .ForMember(p => p.NameOfAuthor, c => c.MapFrom(s => s.Author.FirstName))
                 .ForMember(p => p.NicknameOfAuthor, c => c.MapFrom(s => s.Author.NickName));
+                
+                cfg.CreateMap<UpdatePhotoDto, Photo>();
 
                 // Map for Text
                 cfg.CreateMap<Text, TextDto>()

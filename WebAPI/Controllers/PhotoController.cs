@@ -31,5 +31,13 @@ namespace WebAPI.Controllers
             return Ok(photo);
         }
 
+        [HttpPut("{id}")]
+        public ActionResult Update([FromBody] UpdatePhotoDto updatePhotoDto, [FromRoute] int id)
+        {
+            photoService.UpdatePhoto(updatePhotoDto, id);
+
+            return Ok();
+        }
+
     }
 }

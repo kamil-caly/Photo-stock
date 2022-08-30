@@ -35,5 +35,18 @@ namespace Application.Services
 
             return mapper.Map<PhotoDto>(photo);
         }
+
+        public void UpdatePhoto(UpdatePhotoDto photo, int id)
+        {
+            var existingPhoto = photoRepository.GetById(id);
+
+            if (photo is null)
+            {
+                throw new NotFoundException("photo not found");
+            }
+
+            var updatedPhoto = mapper.Map(photo, existingPhoto);
+            photoRepository.Update(updatedPhoto);
+        }
     }
 }

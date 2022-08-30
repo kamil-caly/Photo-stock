@@ -11,5 +11,6 @@ namespace Domain.Interfaces
     {
         IEnumerable<Photo> GetAll();
         Photo GetById(int id);
+        void Update(Photo photo);
     }
 }

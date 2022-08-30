@@ -2,11 +2,6 @@
 using Domain.Interfaces;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infrastructure.Repositories
 {
@@ -37,6 +32,12 @@ namespace Infrastructure.Repositories
                 .FirstOrDefault(p => p.Id == id);
 
             return photo;
+        }
+
+        public void Update(Photo photo)
+        {
+            dbContext.Photos.Update(photo);
+            dbContext.SaveChanges();
         }
     }
 }
