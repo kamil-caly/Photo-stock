@@ -4,6 +4,7 @@ using Application.Interfaces;
 using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
+using LINQtoCSV;
 
 namespace Application.Services
 {
@@ -40,6 +41,26 @@ namespace Application.Services
             var texts = textRepository.GetAll();
 
             return mapper.Map<IEnumerable<TextDto>>(texts);
+        }
+
+        public void WriteToCsvFile(IEnumerable<TextDto> textDtos)
+        {
+            try
+            {
+                var csvFileDesc = new CsvFileDescription()
+                {
+                    FirstLineHasColumnNames = true,
+                    IgnoreUnknownColumns = true,
+                    SeparatorChar = ';',
+                };
+
+                var csvContext = new CsvContext();
+                csvContext.Write(textDtos, "textEntity.csv", csvFileDesc);
+            }
+            catch (Exception csvEx)
+            {
+                throw new Exception(csvEx.Message);
+            }
         }
     }
 }

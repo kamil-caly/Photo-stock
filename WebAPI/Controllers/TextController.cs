@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
 {
-    [Route("api/author/{authorId}/text")]
+    [Route("api/text")]
     [ApiController]
     public class TextController : ControllerBase
     {
@@ -23,12 +23,22 @@ namespace WebAPI.Controllers
             return Ok(texts);
         }
 
-        [HttpPost]
+        [HttpGet("saveToCsv")]
+        public ActionResult GetAndSaveToCsv()
+        {
+            var texts = textService.GetAll();
+
+            textService.WriteToCsvFile(texts);
+
+            return Ok("Text saved successfuly");
+        }
+
+        [HttpPost("author/{authorId}")]
         public ActionResult Create([FromRoute] int authorId, [FromBody] CreateTextDto dto)
         {
             var newTextId = textService.Create(dto, authorId);
 
-            return Created($"api/author/{authorId}/text/{newTextId}", null);
+            return Created($"New Text id: {newTextId}", null);
         }
     }
 }

@@ -6,5 +6,6 @@ namespace Application.Interfaces
     {
         IEnumerable<TextDto> GetAll();
         int Create(CreateTextDto dto, int authorId);
+        void WriteToCsvFile(IEnumerable<TextDto> textDtos);
     }
 }

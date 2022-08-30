@@ -17,6 +17,15 @@ namespace Application.Services
             this.mapper = mapper;
         }
 
+        public double calculateAverage(IEnumerable<PhotoDto> dtos)
+        {
+            var photos = photoRepository.GetAll();
+
+            var result = photos.Select(p => p.Rating).Average();
+
+            return Math.Round(result, 2);
+        }
+
         public IEnumerable<PhotoDto> GetAll()
         {
             var photos = photoRepository.GetAll();
