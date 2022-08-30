@@ -1,5 +1,11 @@
+using Application.Interfaces;
+using Application.Mappers;
+using Application.Services;
+using Domain.Interfaces;
 using Infrastructure.Data;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
+using System.Reflection;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,9 +20,13 @@ builder.Services.AddDbContext<PhotoStockDbContext>(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddScoped<DbSeeder>();
 
+builder.Services.AddScoped<DbSeeder>();
 ///builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+builder.Services.AddSingleton(PhotoStockMappingProfile.Initialize());
+
+builder.Services.AddScoped<IAuthorService, AuthorService>();
+builder.Services.AddScoped<IAuthorRepository, AuthorRepository>();
 
 var app = builder.Build();
 

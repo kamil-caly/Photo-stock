@@ -1,13 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Domain.Entities;
+using Domain.Interfaces;
+using Infrastructure.Data;
 
 namespace Infrastructure.Repositories
 {
-    public class AuthorRepository
+    public class AuthorRepository : IAuthorRepository
     {
+        private readonly PhotoStockDbContext dbContext;
 
+        public AuthorRepository(PhotoStockDbContext dbContext)
+        {
+            this.dbContext = dbContext;
+        }
+        public IEnumerable<Author> GetAll()
+        {
+            var authors = dbContext
+                .Authors
+                .ToList();
+
+            return authors;
+        }
     }
 }
