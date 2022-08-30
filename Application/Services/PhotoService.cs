@@ -1,4 +1,5 @@
 ﻿using Application.Dto;
+using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
 using Domain.Interfaces;
@@ -26,6 +27,11 @@ namespace Application.Services
         public PhotoDto GetById(int id)
         {
             var photo = photoRepository.GetById(id);
+
+            if (photo is null)
+            {
+                throw new NotFoundException("photo not found");
+            }
 
             return mapper.Map<PhotoDto>(photo);
         }
