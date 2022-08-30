@@ -14,7 +14,16 @@ builder.Services.AddDbContext<PhotoStockDbContext>(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddScoped<DbSeeder>();
+
+///builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
 var app = builder.Build();
+
+using var scope = app.Services.CreateScope();
+
+var seeder = scope.ServiceProvider.GetRequiredService<DbSeeder>();
+seeder.Seed();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
