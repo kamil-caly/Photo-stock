@@ -24,12 +24,11 @@ namespace Infrastructure.Repositories
             return text.Id;
         }
 
-        public IEnumerable<Text> GetAll()
+        public IQueryable<Text> GetAll()
         {
             var texts = dbContext
                 .Texts
-                .Include(t => t.Author)
-                .ToList();
+                .Include(t => t.Author);
 
             return texts;
         }

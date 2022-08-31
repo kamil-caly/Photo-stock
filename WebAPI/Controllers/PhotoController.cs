@@ -16,9 +16,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<PhotoDto>> Get()
+        public ActionResult<IEnumerable<PhotoDto>> Get([FromQuery] ItemQuery query)
         {
-            var photos = photoService.GetAll();
+            var photos = photoService.GetAll(query);
 
             return Ok(photos);
         }
@@ -34,11 +34,9 @@ namespace WebAPI.Controllers
         [HttpGet("calculateAverage")]
         public ActionResult CalculateAverage()
         {
-            var photos = photoService.GetAll();
+            var average = photoService.calculateAverage();
 
-            var average = photoService.calculateAverage(photos);
-
-            return Ok($"Average of {photos.Count()} photo's rating = {average}");
+            return Ok($"Average of photo's rating = {average}");
         }
 
         [HttpPut("{id}")]

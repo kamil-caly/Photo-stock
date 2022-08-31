@@ -1,8 +1,12 @@
+using Application.Dto;
 using Application.Interfaces;
 using Application.Mappers;
 using Application.Middleware;
 using Application.Services;
+using Application.Validators;
 using Domain.Interfaces;
+using FluentValidation;
+using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -21,7 +25,7 @@ builder.Services.AddDbContext<PhotoStockDbContext>(option =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-
+builder.Services.AddControllers().AddFluentValidation();
 builder.Services.AddScoped<DbSeeder>();
 ///builder.Services.AddAutoMapper(Assembly.GetExecutingAssembly());
 builder.Services.AddSingleton(PhotoStockMappingProfile.Initialize());
@@ -33,6 +37,9 @@ builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
 builder.Services.AddScoped<ITextService, TextService>();
 builder.Services.AddScoped<ITextRepository, TextRepository>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
+builder.Services.AddScoped<IValidator<ItemQuery>,AuthorQueryValidator>();
+builder.Services.AddScoped<IValidator<ItemQuery>,PhotoQueryValidator>();
+builder.Services.AddScoped<IValidator<ItemQuery>,TextQueryValidator>();
 
 var app = builder.Build();
 

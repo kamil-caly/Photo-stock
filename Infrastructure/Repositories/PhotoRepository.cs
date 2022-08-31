@@ -14,12 +14,11 @@ namespace Infrastructure.Repositories
             this.dbContext = dbContext;
         }
 
-        public IEnumerable<Photo> GetAll()
+        public IQueryable<Photo> GetAll()
         {
             var photos = dbContext
                 .Photos
-                .Include(p => p.Author)
-                .ToList();
+                .Include(p => p.Author);
 
             return photos;
         }

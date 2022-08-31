@@ -9,7 +9,7 @@ namespace Domain.Interfaces
 {
     public interface IPhotoRepository
     {
-        IEnumerable<Photo> GetAll();
+        IQueryable<Photo> GetAll();
         Photo GetById(int id);
         void Update(Photo photo);
     }

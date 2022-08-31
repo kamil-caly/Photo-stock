@@ -2,7 +2,9 @@
 using Application.Exceptions;
 using Application.Interfaces;
 using AutoMapper;
+using Domain.Entities;
 using Domain.Interfaces;
+using System.Linq.Expressions;
 
 namespace Application.Services
 {
@@ -17,7 +19,7 @@ namespace Application.Services
             this.mapper = mapper;
         }
 
-        public double calculateAverage(IEnumerable<PhotoDto> dtos)
+        public double calculateAverage()
         {
             var photos = photoRepository.GetAll();
 
@@ -26,11 +28,42 @@ namespace Application.Services
             return Math.Round(result, 2);
         }
 
-        public IEnumerable<PhotoDto> GetAll()
+        public PageResult<PhotoDto> GetAll(ItemQuery query)
         {
-            var photos = photoRepository.GetAll();
+            IQueryable<Photo> photos = photoRepository.GetAll();
 
-            return mapper.Map<IEnumerable<PhotoDto>>(photos);
+            var baseQuery = photos
+                .Where(p => query.searchPhrase == null ||
+                    (p.Name.ToLower().Contains(query.searchPhrase.ToLower()) ||
+                    p.Author.FirstName.ToLower().Contains(query.searchPhrase.ToLower())));
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelectors = new Dictionary<string, Expression<Func<Photo, object>>>()
+                {
+                    {nameof(Photo.Name), p => p.Name },
+                    {nameof(Photo.Cost), p => p.Cost },
+                    {nameof(Photo.Rating), p => p.Rating },
+                    {nameof(Photo.NumberOfSales), p => p.NumberOfSales }
+                };
+
+                var selectedColumn = columnsSelectors[query.SortBy];
+
+                baseQuery = query.SortDirection == SortDirection.ASC
+                    ? baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+            }
+
+            var filtredPhotos = baseQuery
+                .Skip(query.pageSize * (query.pageNumber - 1))
+                .Take(query.pageSize)
+                .ToList();
+
+            var photoDtos = mapper.Map<List<PhotoDto>>(filtredPhotos);
+
+            var result = new PageResult<PhotoDto>(photoDtos, baseQuery.Count(), query.pageSize, query.pageNumber);
+
+            return result;
         }
 
         public PhotoDto GetById(int id)

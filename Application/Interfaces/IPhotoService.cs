@@ -4,10 +4,10 @@ namespace Application.Interfaces
 {
     public interface IPhotoService
     {
-        IEnumerable<PhotoDto> GetAll();
+        PageResult<PhotoDto> GetAll(ItemQuery query);
         PhotoDto GetById(int id);
         void UpdatePhoto(UpdatePhotoDto photo, int id);
 
-        double calculateAverage(IEnumerable<PhotoDto> dtos);
+        double calculateAverage();
     }
 }

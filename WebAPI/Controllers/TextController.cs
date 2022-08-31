@@ -16,9 +16,9 @@ namespace WebAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<TextDto>> Get()
+        public ActionResult<IEnumerable<TextDto>> Get([FromQuery] ItemQuery query)
         {
-            var texts = textService.GetAll();
+            var texts = textService.GetAll(query);
 
             return Ok(texts);
         }
@@ -26,9 +26,7 @@ namespace WebAPI.Controllers
         [HttpGet("saveToCsv")]
         public ActionResult GetAndSaveToCsv()
         {
-            var texts = textService.GetAll();
-
-            textService.WriteToCsvFile(texts);
+            textService.WriteToCsvFile();
 
             return Ok("Text saved successfuly");
         }

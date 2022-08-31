@@ -5,6 +5,7 @@ using AutoMapper;
 using Domain.Entities;
 using Domain.Interfaces;
 using LINQtoCSV;
+using System.Linq.Expressions;
 
 namespace Application.Services
 {
@@ -36,15 +37,51 @@ namespace Application.Services
             return textRepository.Create(authorId, textEntity);
         }
 
-        public IEnumerable<TextDto> GetAll()
+        public PageResult<TextDto> GetAll(ItemQuery query)
         {
-            var texts = textRepository.GetAll();
+            IQueryable<Text> texts = textRepository.GetAll();
 
-            return mapper.Map<IEnumerable<TextDto>>(texts);
+            var baseQuery = texts
+                .Where(t => query.searchPhrase == null ||
+                    (t.Name.ToLower().Contains(query.searchPhrase.ToLower()) ||
+                    t.Author.FirstName.ToLower().Contains(query.searchPhrase.ToLower()) ||
+                    t.TextDesc.ToLower().Contains(query.searchPhrase.ToLower())));
+
+            if (!string.IsNullOrEmpty(query.SortBy))
+            {
+                var columnsSelectors = new Dictionary<string, Expression<Func<Text, object>>>()
+                {
+                    {nameof(Text.Name), t => t.Name },
+                    {nameof(Text.Cost), t => t.Cost },
+                    {nameof(Text.NumberOfSales), t => t.NumberOfSales },
+                    {nameof(Text.Rating), t => t.Rating }
+                };
+
+                var selectedColumn = columnsSelectors[query.SortBy];
+
+                baseQuery = query.SortDirection == SortDirection.ASC
+                    ? baseQuery.OrderBy(selectedColumn)
+                    : baseQuery.OrderByDescending(selectedColumn);
+            }
+
+            var filtredTexts = baseQuery
+                .Skip(query.pageSize * (query.pageNumber - 1))
+                .Take(query.pageSize)
+                .ToList();
+
+            var textDtos = mapper.Map<List<TextDto>>(filtredTexts);
+
+            var result = new PageResult<TextDto>(textDtos, baseQuery.Count(), query.pageSize, query.pageNumber);
+
+            return result;
         }
 
-        public void WriteToCsvFile(IEnumerable<TextDto> textDtos)
+        public void WriteToCsvFile()
         {
+            var texts = textRepository.GetAll().ToList();
+
+            var textDtos = mapper.Map<List<TextDto>>(texts);
+            
             try
             {
                 var csvFileDesc = new CsvFileDescription()
@@ -54,7 +91,7 @@ namespace Application.Services
                     SeparatorChar = ';',
                 };
 
-                var csvContext = new CsvContext();
+                var csvContext = new CsvContext(); 
                 csvContext.Write(textDtos, "textEntity.csv", csvFileDesc);
             }
             catch (Exception csvEx)

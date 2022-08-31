@@ -4,7 +4,7 @@ namespace Domain.Interfaces
 {
     public interface IAuthorRepository
     {
-        IEnumerable<Author> GetAll();
+        IQueryable<Author> GetAll();
         Author GetById(int id);
     }
 }
