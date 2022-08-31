@@ -4,15 +4,41 @@ using Application.Mappers;
 using Application.Middleware;
 using Application.Services;
 using Application.Validators;
+using Domain.Entities;
 using Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.AspNetCore;
 using Infrastructure.Data;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using System.Reflection;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+var authenticationSettings = new AuthenticationSettings();
+
+builder.Configuration.GetSection("Authentication").Bind(authenticationSettings);
+builder.Services.AddSingleton(authenticationSettings);
+
+builder.Services.AddAuthentication(option =>
+{
+    option.DefaultAuthenticateScheme = "Bearer";
+    option.DefaultScheme = "Bearer";
+    option.DefaultChallengeScheme = "Bearer";
+}).AddJwtBearer(cfg =>
+{
+    cfg.RequireHttpsMetadata = false;
+    cfg.SaveToken = true;
+    cfg.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidIssuer = authenticationSettings.JwtIssuer,
+        ValidAudience = authenticationSettings.JwtIssuer,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(authenticationSettings.JwtKey))
+    };
+});
 
 // Add services to the container.
 
@@ -36,10 +62,14 @@ builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IPhotoRepository, PhotoRepository>();
 builder.Services.AddScoped<ITextService, TextService>();
 builder.Services.AddScoped<ITextRepository, TextRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
+builder.Services.AddScoped<IAccountService, AccountService>();
 builder.Services.AddScoped<ErrorHandlingMiddleware>();
 builder.Services.AddScoped<IValidator<ItemQuery>,AuthorQueryValidator>();
 builder.Services.AddScoped<IValidator<ItemQuery>,PhotoQueryValidator>();
 builder.Services.AddScoped<IValidator<ItemQuery>,TextQueryValidator>();
+builder.Services.AddScoped<IValidator<RegisterUserDto>,RegisterUserValidator>();
+builder.Services.AddScoped<IPasswordHasher<User>, PasswordHasher<User>>();
 
 var app = builder.Build();
 
@@ -56,6 +86,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseMiddleware<ErrorHandlingMiddleware>();
+
+app.UseAuthentication();
 
 app.UseHttpsRedirection();
 

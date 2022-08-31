@@ -16,6 +16,11 @@ namespace Application.Middleware
                 context.Response.StatusCode = 404;
                 await context.Response.WriteAsync(notFound.Message);
             }
+            catch (BadRequestException badRequest)
+            {
+                context.Response.StatusCode = 400;
+                await context.Response.WriteAsync(badRequest.Message);
+            }
             catch (Exception ex)
             {
                 context.Response.StatusCode = 500;

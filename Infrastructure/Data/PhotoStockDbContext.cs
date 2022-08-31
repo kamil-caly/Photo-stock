@@ -13,6 +13,7 @@ namespace Infrastructure.Data
         public DbSet<Author> Authors { get; set; }
         public DbSet<Photo> Photos { get; set; }
         public DbSet<Text> Texts { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
