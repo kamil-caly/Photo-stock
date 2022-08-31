@@ -1,5 +1,6 @@
 ﻿using Application.Dto;
 using Application.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebAPI.Controllers
@@ -31,6 +32,7 @@ namespace WebAPI.Controllers
             return Ok(photo);
         }
 
+        [Authorize]
         [HttpGet("calculateAverage")]
         public ActionResult CalculateAverage()
         {
@@ -39,6 +41,7 @@ namespace WebAPI.Controllers
             return Ok($"Average of photo's rating = {average}");
         }
 
+        [Authorize]
         [HttpPut("{id}")]
         public ActionResult Update([FromBody] UpdatePhotoDto updatePhotoDto, [FromRoute] int id)
         {
